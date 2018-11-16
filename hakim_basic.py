@@ -48,8 +48,8 @@ def hhl(sequence):
 
 
 example1 = [7, 6, 5, 4, 3, 2, 1, 1, 1]
-example2 = [2, 2, 2, 1, 1, 1, 1]
-example3 = [3, 3, 3, 3, 3]
+example2 = [2, 2, 2, 1, 1]
+example3 = [3, 3, 2, 2, 1, 1]
 print(sum(example1))
 print(hhl(example1))
 print(hhl(example2))

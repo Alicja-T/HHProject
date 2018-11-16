@@ -1,0 +1,114 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Verdana", Verdana, Arial, sans-serif;
+  color: #fff;
+}
+
+header{
+  background-color: #51bfe2;
+  height: 35px;
+  width: 100%;
+  opacity: .9;
+  margin-bottom: 10px;
+}
+
+header h1.logo {
+  margin: 0;
+  font-size: 1.7em;
+  color: #fff;
+  text-transform: uppercase;
+  float: left;
+}
+
+header h1.logo:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.container {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+div.home {
+  padding: 10px 0 30px 0;
+  background-color: #2285ad;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+}
+
+div.about {
+  padding: 10px 0 30px 0;
+  background-color: #74a7c6;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+}
+
+h3 {
+  font-size: 1.7em;
+  font-weight: 100;
+  margin-top: 30px;
+  text-align: center;
+  letter-spacing: -1px;
+}
+
+.menu {
+  float: right;
+  margin-top: 8px;
+}
+
+.menu li{
+  display: inline;
+}
+
+.menu li+li {
+  margin-left: 35px;
+}
+
+.menu li a {
+  color: #444;
+  text-decoration: none;
+}
+
+.form_container input[type=text] {
+padding:5px 0px;
+margin:5px 5px 5px 0px;
+}
+
+.add_form_field
+{
+    background-color: #1c97f3;
+    border: none;
+    color: white;
+    padding: 8px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+ border:1px solid #186dad;
+}
+
+input{
+    border: 1px solid #1c97f3;
+    width: 260px;
+    height: 40px;
+ margin-bottom:14px;
+}
+
+.delete{
+    background-color: #fd1200;
+    border: none;
+    color: white;
+    padding: 5px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
