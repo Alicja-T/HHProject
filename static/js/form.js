@@ -1,23 +1,44 @@
-$(document).ready(function() {
-    var max_fields      = 10;
-    var wrapper         = $(".form_container");
-    var add_button      = $(".add_form_field");
+function validate(){
+var sequence = document.forms["userInput"]["userSequence"]
 
-    var x = 1;
-    $(add_button).click(function(e){
+if (sequence.value == ""){
+  window.alert("you didn't enter any numbers");
+  sequence.focus();
+  return false;
+}
 
-        e.preventDefault();
-        if(x < max_fields){
-            x++;
-            $(wrapper).append('<div><input type="text" name="mytext'+ x + '"/><a href="#" class="delete">Delete</a></div>'); //add input box
-        }
-  else
-  {
-  alert('You Reached the limits')
+var seqArray = sequence.value.split(" ");
+var errorMessage = "";
+var negative = false;
+var increasing = false;
+
+for (i = 0; i < seqArray.length - 1; i++){
+  var value = Number(seqArray[i]);
+  if (value < 0) {
+    negative = true;
   }
-    });
+  var nextValue = Number(seqArray[i+1]);
+  if (value < nextValue) {
+    increasing = true;
+  }
+}
+if (seqArray[0] != seqArray.length - 1) {
+  errorMessage += " The number of elements doesn't match the first number."
+}
 
-    $(wrapper).on("click",".delete", function(e){
-        e.preventDefault(); $(this).parent('div').remove(); x--;
-    })
-});
+if (negative) {
+  errorMessage += " The numbers should be non-negative.";
+}
+
+if (increasing){
+  errorMessage += " The sequence should be non-increasing."
+}
+
+if (errorMessage != "") {
+  window.alert(errorMessage);
+  return false;
+}
+
+return true;
+
+}

@@ -4,8 +4,11 @@
   <h3>Havel-Hakimi algorithm demonstration</h3>
   <p>Constructing a graph from a degree sequence if it's possible</p>
   <div class="form_container">
-    <button class="add_form_field">Add New Field <span style="font-size:16px; font-weight:bold;">+ </span></button>
-    <div><input type="text" name="mytext[]"></div>
+    <form name="userInput" onsubmit = "return validate()">
+      <label>Enter degree sequence: </label>
+      <input type="text" id="sequence" name="userSequence">
+      <button class="submit">Submit</button>
+    </form>
   </div>
 </div>
 {%endblock%}
