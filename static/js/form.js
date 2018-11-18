@@ -1,16 +1,19 @@
 function validate(){
 var sequence = document.forms["userInput"]["userSequence"]
+var errorMessage = "";
+var error = document.querySelector('.error');
 
 if (sequence.value == ""){
-  window.alert("you didn't enter any numbers");
+  errorMessage += " You didn't enter any numbers!";
   sequence.focus();
   return false;
 }
 
 var seqArray = sequence.value.split(" ");
-var errorMessage = "";
 var negative = false;
 var increasing = false;
+var notInteger = false;
+var  er = /^-?[0-9]+$/;
 
 for (i = 0; i < seqArray.length - 1; i++){
   var value = Number(seqArray[i]);
@@ -21,9 +24,14 @@ for (i = 0; i < seqArray.length - 1; i++){
   if (value < nextValue) {
     increasing = true;
   }
+  var isInt = er.test(seqArray[i]);
+  if (!isInt)  {
+    notInteger = true;
+  }
+
 }
 if (seqArray[0] != seqArray.length - 1) {
-  errorMessage += " The number of elements doesn't match the first number."
+  errorMessage += " The number of elements doesn't match the first number.";
 }
 
 if (negative) {
@@ -31,12 +39,21 @@ if (negative) {
 }
 
 if (increasing){
-  errorMessage += " The sequence should be non-increasing."
+  errorMessage += " The sequence should be non-increasing.";
+}
+
+if (notInteger) {
+  errorMessage += " The numbers should be integers.";
 }
 
 if (errorMessage != "") {
-  window.alert(errorMessage);
+  error.innerHTML = errorMessage;
+  error.className = "error active";
   return false;
+}
+else {
+  error.innerHTML = ""; // Reset the content of the message
+  error.className = "error";
 }
 
 return true;
