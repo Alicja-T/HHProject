@@ -54,64 +54,37 @@ def Max_HH(sequence): #returns constructed graph
     size = len(sequence)
     index = list(range(size))
     edges = []
-    adj_matrix = [0]*size
-    for i in range(size):
-        adj_matrix[i] = [0]*size
-    working_seq = sequence
-    inv_list = list(zip(sequence, index))
-    vertices_d = defaultdict(list)
-    for k, v in inv_list:
-        vertices_d[k].append(v)
+    vertices_d = []
     max = sequence[0]
-    next_max = sequence[1]
-    while len(vertices_d) > 0:
-        max_nodes = deque(vertices_d.get(max))
-        nextmax_nodes = deque(vertices_d.get(next_max))
-        first_node = max_nodes[0]
-        print(max_nodes)
-        print(nextmax_nodes)
-        if (max==next_max):
-            second_node = max_nodes[1]
-        else:
-            second_node = nextmax_nodes[0]
-        if (adj_matrix[first_node][second_node] == 0):
-            adj_matrix[first_node][second_node] = 1
-            adj_matrix[second_node][first_node] = 1
-            edges.append([first_node, second_node])
-        else:
-            i = 1 if max==next_max else 0
-            while (adj_matrix[first_node][second_node] == 1 and i < len(nextmax_nodes) - 1):
-                i += 1
-                second_node = nextmax_nodes[i]
-            adj_matrix[first_node][second_node] = 1
-            adj_matrix[second_node][first_node] = 1
-            edges.append([first_node, second_node])
-        if (max==next_max):
-            max_nodes.popleft()
-            max_nodes.popleft()
-            vertices_d.update({max : max_nodes})
-            if (max - 1 > 0):
-                vertices_d[max-1].append(first_node)
-                vertices_d[max-1].append(second_node)
-            print(vertices_d)
-        else:
-            max_nodes.popleft()
-            next_nodes.popleft()
-            vertices_d[max] = max_nodes
-            vertices_d[next_max] = nextmax_nodes
-            vertices_d[max-1].append(first_node)
-            if (next_max - 1 > 0):
-                vertices_d[next_max-1].append(second_node)
-        working_seq[first_node] -= 1
-        working_seq[second_node] -= 1
-        print(vertices_d.get(max))
-        while (vertices_d.get(max) == deque([])):
+    for i in range(max + 1):
+        vertices_d.append(deque())
+    i = 0
+    vertices_left = size
+    for v in sequence: #creating list of vertices by degrees
+        vertices_d[v].append(i)
+        i += 1
+    while vertices_left > 0:
+        updated_vertices = []
+        while (len(vertices_d[max])==0):
             max -= 1
-            next_max -= 1
-        print(max)
+        start = vertices_d[max].popleft()
+        next_max = max
+        for i in range(next_max):
+            while (len(vertices_d[next_max]) == 0):
+                next_max -= 1
+            end = vertices_d[next_max].popleft()
+            edges.append([start, end])
+            vertices_left -= 1
+            if (next_max - 1 > 0):
+                updated_vertices.append([next_max-1, end])
+        print(vertices_left)
+        i = 0
+        for i in range(len(updated_vertices)):
+            vertices_d[updated_vertices[i][0]].append(updated_vertices[i][1])
+            i += 1
+        vertices_left += len(updated_vertices) - 1
+        print(vertices_left)
         print(edges)
-        for i in range(size):
-            print(adj_matrix[i])
     return edges
 
 example1 = [7, 6, 5, 4, 3, 2, 1, 1, 1]
