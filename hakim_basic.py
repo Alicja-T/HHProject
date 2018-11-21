@@ -1,3 +1,6 @@
+from collections import defaultdict, deque
+
+
 def check_parity(sequence):
     parity = sum(sequence) % 2
     return False if parity else True
@@ -46,11 +49,74 @@ def hhl(sequence):
         print("Weights: " + str(weights))
     return True
 
+#assumption: sequence at this point is stripped of zeros and leading number that represents number of vertices
+def Max_HH(sequence): #returns constructed graph
+    size = len(sequence)
+    index = list(range(size))
+    edges = []
+    adj_matrix = [0]*size
+    for i in range(size):
+        adj_matrix[i] = [0]*size
+    working_seq = sequence
+    inv_list = list(zip(sequence, index))
+    vertices_d = defaultdict(list)
+    for k, v in inv_list:
+        vertices_d[k].append(v)
+    max = sequence[0]
+    next_max = sequence[1]
+    while len(vertices_d) > 0:
+        max_nodes = deque(vertices_d.get(max))
+        nextmax_nodes = deque(vertices_d.get(next_max))
+        first_node = max_nodes[0]
+        print(max_nodes)
+        print(nextmax_nodes)
+        if (max==next_max):
+            second_node = max_nodes[1]
+        else:
+            second_node = nextmax_nodes[0]
+        if (adj_matrix[first_node][second_node] == 0):
+            adj_matrix[first_node][second_node] = 1
+            adj_matrix[second_node][first_node] = 1
+            edges.append([first_node, second_node])
+        else:
+            i = 1 if max==next_max else 0
+            while (adj_matrix[first_node][second_node] == 1 and i < len(nextmax_nodes) - 1):
+                i += 1
+                second_node = nextmax_nodes[i]
+            adj_matrix[first_node][second_node] = 1
+            adj_matrix[second_node][first_node] = 1
+            edges.append([first_node, second_node])
+        if (max==next_max):
+            max_nodes.popleft()
+            max_nodes.popleft()
+            vertices_d.update({max : max_nodes})
+            if (max - 1 > 0):
+                vertices_d[max-1].append(first_node)
+                vertices_d[max-1].append(second_node)
+            print(vertices_d)
+        else:
+            max_nodes.popleft()
+            next_nodes.popleft()
+            vertices_d[max] = max_nodes
+            vertices_d[next_max] = nextmax_nodes
+            vertices_d[max-1].append(first_node)
+            if (next_max - 1 > 0):
+                vertices_d[next_max-1].append(second_node)
+        working_seq[first_node] -= 1
+        working_seq[second_node] -= 1
+        print(vertices_d.get(max))
+        while (vertices_d.get(max) == deque([])):
+            max -= 1
+            next_max -= 1
+        print(max)
+        print(edges)
+        for i in range(size):
+            print(adj_matrix[i])
+    return edges
 
 example1 = [7, 6, 5, 4, 3, 2, 1, 1, 1]
 example2 = [2, 2, 2, 1, 1]
 example3 = [3, 3, 2, 2, 1, 1]
-print(sum(example1))
-print(hhl(example1))
-print(hhl(example2))
-print(hhl(example3))
+petersen = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3 ]
+
+print(Max_HH(petersen))
