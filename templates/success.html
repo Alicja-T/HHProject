@@ -1,6 +1,10 @@
 {%extends "layout.html"%}
 {%block content%}
+<link rel="stylesheet" href={{cdn_css | safe }} type="text/css" />
+<script type="text/javascript" src={{cdn_js | safe}}></script>
 <div class="about">
   <h3>I'm goint to check your sequence now...</h3>
 </div>
+{{plot_script | safe}}
+{{plot_div | safe}}
 {%endblock%}

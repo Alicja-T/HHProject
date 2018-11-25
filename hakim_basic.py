@@ -11,14 +11,18 @@ class Havel_Hakimi:
         while (self.sequence[i] == 0):
             i -= 1
         self.sequence = self.sequence[:i+1]
+        self.size = len(self.sequence)
         return self.sequence
 
     def is_graphic(self):
+        print(self.sequence)
+        print(self.size)
+        self.sequence = self.strip_zeros()
         if ( (sum(self.sequence) % 2 ) == 1 ): # if sum is not even the sequence is not graphic
             return False
         weights = [0] * self.size
         reserve = [0] * self.size
-        weights[0] = len(selfself.sequence) - 1
+        weights[0] = len(self.sequence) - 1
         while (self.sequence[weights[0]] < 1):
             weights[0]-= 1
         reserve[0] = weights[0] - 1 - self.sequence[0]
@@ -37,6 +41,8 @@ class Havel_Hakimi:
 
 #assumption: sequence at this point is stripped of zeros and leading number that represents number of vertices
     def Max_HH(self): #returns constructed graph
+        if not self.is_graphic():
+            return []
         index = list(range(self.size))
         edges = []
         vertices_d = []
@@ -62,14 +68,11 @@ class Havel_Hakimi:
                 vertices_left -= 1
                 if (next_max - 1 > 0):
                     updated_vertices.append([next_max-1, end])
-            print(vertices_left)
             i = 0
             for i in range(len(updated_vertices)):
                 vertices_d[updated_vertices[i][0]].append(updated_vertices[i][1])
                 i += 1
             vertices_left += len(updated_vertices) - 1
-            print(vertices_left)
-            print(edges)
         return edges
 
 
@@ -77,3 +80,7 @@ example1 = [7, 6, 5, 4, 3, 0, 0, 0, 0, 0]
 example2 = [2, 2, 2, 1, 1]
 example3 = [3, 3, 2, 2, 1, 1]
 petersen = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3 ]
+
+hh = Havel_Hakimi(example1)
+answer = hh.is_graphic()
+edges = hh.Max_HH()
