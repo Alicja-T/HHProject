@@ -1,16 +1,12 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: "Verdana", Verdana, Arial, sans-serif;
-  color: #fff;
+html, body {
+  height: 100%;
+  color: white;
 }
 
 header{
   background-color: #51bfe2;
-  height: 35px;
   width: 100%;
   opacity: .9;
-  margin-bottom: 10px;
 }
 
 header h1.logo {
@@ -27,24 +23,17 @@ header h1.logo:hover {
 }
 
 .container {
-  width: 1200px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 div.home {
-  padding: 10px 0 30px 0;
+  padding: 1.8rem;
   background-color: #2285ad;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  border-radius: 6px;
 }
 
 div.about {
-  padding: 10px 0 30px 0;
+  padding: 1.8rem;
   background-color: #74a7c6;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  border-radius: 6px;
 }
 
 h3 {
@@ -52,30 +41,11 @@ h3 {
   font-weight: 100;
   margin-top: 30px;
   text-align: center;
-  letter-spacing: -1px;
-}
-
-.menu {
-  float: right;
-  margin-top: 8px;
-}
-
-.menu li{
-  display: inline;
-}
-
-.menu li+li {
-  margin-left: 35px;
-}
-
-.menu li a {
-  color: #444;
-  text-decoration: none;
 }
 
 .form_container {
-padding:5px 0px;
-margin:5px 5px 5px 0px;
+padding: 1.8 rem;
+margin: 1 rem;
 }
 
 input{
