@@ -36,7 +36,7 @@ def success():
             cdn_js = graph_data[2]
             cdn_css = graph_data[3]
 
-    return render_template("success.html", plot_script=script, plot_div=div, cdn_js=cdn_js, cdn_css=cdn_css)
+    return render_template("success.html", isGraphic = isGraphic, plot_script=script, plot_div=div, cdn_js=cdn_js, cdn_css=cdn_css)
 
 if __name__=="__main__":
     app.run(debug=True)

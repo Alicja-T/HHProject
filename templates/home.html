@@ -2,7 +2,9 @@
 {%block content%}
 <div class="home">
   <h3>Havel-Hakimi algorithm demonstration</h3>
-  <p>Constructing a graph from a degree sequence if it's possible</p>
+  <br>
+  <p>Constructing a graph from a degree sequence using Havel-Hakimi algorithm.</p>
+    <p>Degree sequence should start with the number of vertices. It should be non-increasing and it should contain only integers </p>
   <div class="form_container">
     <form action="{{url_for('success')}}" name="userInput" onsubmit = "return validate()" method="POST">
       <label>Enter degree sequence: </label>
