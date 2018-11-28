@@ -26,7 +26,7 @@ class Graph_Visual:
         return zip(x,y)
 
     def create_plot(self):
-        plot = figure(title="Graph from sequence", x_range=(-1.1, 1.1),
+        plot = figure( x_range=(-1.1, 1.1),
         y_range=(-1.1,1.1), tools="", toolbar_location=None)
 
         colors = []
@@ -39,7 +39,7 @@ class Graph_Visual:
         )
         graph.node_renderer.data_source.add(colors, 'color')
         graph.node_renderer.glyph = Circle(size=25, fill_color='color')
-
+        plot.sizing_mode = 'scale_width'
 
         start_points, end_points = map( list, zip(*self.edges) )
 
@@ -49,11 +49,8 @@ class Graph_Visual:
         )
 
         circ = [i*2*math.pi/self.size for i in self.node_indices]
-        print(circ)
         y = [math.cos(i) for i in circ]
         x = [math.sin(i) for i in circ]
-        print(x)
-        print(y)
 
         graph_layout = dict(zip(self.node_indices, zip(x,y)))
         graph.layout_provider = StaticLayoutProvider(graph_layout=graph_layout)
