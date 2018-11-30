@@ -1,8 +1,19 @@
-from flask import Flask, render_template, request
+import os
+from flask import Flask, render_template, request, redirect, url_for
 from hakim_basic import Havel_Hakimi
 from graph_visual import Graph_Visual
+from werkzeug import secure_filename
+
+UPLOAD_FOLDER = '/home/emunah/mysite/uploads'
+UPLOAD_FOLDER2 = 'c:/temp'
+ALLOWED_EXTENSIONS = set(['txt'])
 
 app=Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER2
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
 @app.route("/")
 def home():
   return render_template("home.html")
@@ -11,7 +22,23 @@ def home():
 def about():
   return render_template("about.html")
 
-@app.route("/success/", methods=['POST'])
+@app.route("/upload/", methods=['GET', 'POST'])
+def upload():
+    if request.method=='POST':
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        return render_template("upload.html", filename=filename)
+
+@app.route("/file_analysis", methods=['POST'])
+def file_analysis():
+    if request.method=='POST':
+        print(request.form)
+    return render_template("upload.html")
+
+
+@app.route("/success/", methods=['GET', 'POST'])
 def success():
     if request.method=='POST':
         sequence = request.form["userSequence"]
