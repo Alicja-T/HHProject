@@ -34,8 +34,52 @@ def upload():
 @app.route("/file_analysis", methods=['POST'])
 def file_analysis():
     if request.method=='POST':
-        print(request.form)
-    return render_template("upload.html")
+        error = ""
+        filename = request.form['confirm']
+        filepath = UPLOAD_FOLDER2 + '/' + filename
+        numbers = []
+        file = open(filepath, "r")
+        for val in file.read().split():
+            numbers.append( int(val) )
+        i = 0
+        sequences = []
+        invalid_file = False
+        while i < len(numbers):
+            count = numbers[i]
+            sequence = []
+            while count > 0:
+                i += 1
+                print(count)
+                print(sequence)
+                if (i < len(numbers)):
+                    sequence.append(numbers[i])
+                else:
+                    invalid_file = True
+                    break
+                count -= 1
+            sequences.append(sequence)
+            i += 1
+        if (not invalid_file):
+            div = ""
+            i = 0
+            for seq in sequences:
+                hh = Havel_Hakimi(seq)
+                isGraphic = hh.is_graphic()
+                if isGraphic:
+                    div += "<p>Sequence: " + str(seq) + " is Graphic!</p>"
+                    edges = hh.Max_HH()
+                    graph = Graph_Visual(sequence, edges)
+                    graph_data = graph.create_plot()
+                    script = graph_data[0]
+                    div = graph_data[1]
+                    cdn_js = graph_data[2]
+                    cdn_css = graph_data[3]
+
+                else:
+                    div += "<p>Sequence: " + str(seq) + " is not Graphic!</p>"
+        else:
+            div = "your file is invalid"
+    return render_template("file_analysis.html", result_div = div)
 
 
 @app.route("/success/", methods=['GET', 'POST'])

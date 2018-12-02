@@ -1,0 +1,10 @@
+{%extends "layout.html"%}
+{%block content%}
+<div class="file_analysis">
+
+    <div class="results">
+      <h3>Here is information about the sequences provided in a file {{filename}}</h3>
+      {{result_div | safe}}
+    </div>
+</div>
+{%endblock%}

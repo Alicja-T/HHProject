@@ -1,0 +1,9 @@
+{%extends "layout.html"%}
+{%block content%}
+<div class="upload">
+  <h3>File {{filename}} uploaded successfully!</h3>
+  <form action="{{url_for('file_analysis')}}" name="submit" method="POST" value="{{filename}}">
+      <button name="confirm" type="submit" value="{{filename}}"> Analyze the file {{filename}} </button>
+  </form>
+</div>
+{%endblock%}
