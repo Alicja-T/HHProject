@@ -49,8 +49,6 @@ def file_analysis():
             sequence = []
             while count > 0:
                 i += 1
-                print(count)
-                print(sequence)
                 if (i < len(numbers)):
                     sequence.append(numbers[i])
                 else:
@@ -59,19 +57,24 @@ def file_analysis():
                 count -= 1
             sequences.append(sequence)
             i += 1
+        print(invalid_file)
         if (not invalid_file):
             div = ""
+            script = ""
+            cdn_js = ""
+            cdn_css = ""
             i = 0
             for seq in sequences:
                 hh = Havel_Hakimi(seq)
                 isGraphic = hh.is_graphic()
+                print(isGraphic)
                 if isGraphic:
                     div += "<p>Sequence: " + str(seq) + " is Graphic!</p>"
                     edges = hh.Max_HH()
                     graph = Graph_Visual(sequence, edges)
                     graph_data = graph.create_plot()
-                    script = graph_data[0]
-                    div = graph_data[1]
+                    div += graph_data[0]
+                    div += graph_data[1]
                     cdn_js = graph_data[2]
                     cdn_css = graph_data[3]
 
@@ -79,7 +82,7 @@ def file_analysis():
                     div += "<p>Sequence: " + str(seq) + " is not Graphic!</p>"
         else:
             div = "your file is invalid"
-    return render_template("file_analysis.html", result_div = div)
+    return render_template("file_analysis.html", error=invalid_file, result_div = div, cdn_js=cdn_js, cdn_css=cdn_css)
 
 
 @app.route("/success/", methods=['GET', 'POST'])

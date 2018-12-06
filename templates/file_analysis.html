@@ -1,10 +1,17 @@
 {%extends "layout.html"%}
 {%block content%}
+<link rel="stylesheet" href={{cdn_css | safe }} type="text/css" />
+<script type="text/javascript" src={{cdn_js | safe}}></script>
+
 <div class="file_analysis">
 
     <div class="results">
-      <h3>Here is information about the sequences provided in a file {{filename}}</h3>
-      {{result_div | safe}}
+      {% if error %}
+         <h3>Your file is invalid!</h3>
+      {% else %}
+         <h3>Here is information about sequences in your file: </h3>
+          {{result_div | safe}}
+      {% endif %}
     </div>
 </div>
 {%endblock%}
