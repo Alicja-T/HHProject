@@ -7,6 +7,9 @@ from werkzeug import secure_filename
 UPLOAD_FOLDER = '/home/emunah/mysite/uploads'
 UPLOAD_FOLDER2 = 'c:/temp'
 ALLOWED_EXTENSIONS = set(['txt'])
+FORM_PREFIX = """<button name="confirm" type="submit" value="graph"""
+FORM_SUFIX = """.html"> See graph </button>
+            """
 
 app=Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER2
@@ -21,6 +24,13 @@ def home():
 @app.route("/about/")
 def about():
   return render_template("about.html")
+
+@app.route("/results", methods=['GET', 'POST'])
+def results():
+    if request.method=='POST':
+        filename = request.form['confirm']
+        print("got you result "+filename)
+    return render_template(filename)
 
 @app.route("/upload/", methods=['GET', 'POST'])
 def upload():
@@ -61,28 +71,23 @@ def file_analysis():
         if (not invalid_file):
             div = ""
             script = ""
-            cdn_js = ""
-            cdn_css = ""
             i = 0
             for seq in sequences:
                 hh = Havel_Hakimi(seq)
                 isGraphic = hh.is_graphic()
                 print(isGraphic)
                 if isGraphic:
-                    div += "<p>Sequence: " + str(seq) + " is Graphic!</p>"
+                    i += 1
+                    div += "<div>Sequence: " + str(seq) + " is Graphic!"
                     edges = hh.Max_HH()
-                    graph = Graph_Visual(sequence, edges)
-                    graph_data = graph.create_plot()
-                    div += graph_data[0]
-                    div += graph_data[1]
-                    cdn_js = graph_data[2]
-                    cdn_css = graph_data[3]
-
+                    graph = Graph_Visual(seq, edges)
+                    graph_data = graph.create_plot(i)
+                    div += FORM_PREFIX + str(i) + FORM_SUFIX
                 else:
-                    div += "<p>Sequence: " + str(seq) + " is not Graphic!</p>"
+                    div += "<div>Sequence: " + str(seq) + " is not Graphic!</div>"
         else:
             div = "your file is invalid"
-    return render_template("file_analysis.html", error=invalid_file, result_div = div, cdn_js=cdn_js, cdn_css=cdn_css)
+    return render_template("file_analysis.html", error=invalid_file, result_div = div)
 
 
 @app.route("/success/", methods=['GET', 'POST'])
@@ -102,7 +107,7 @@ def success():
         cdn_css = ""
         print(isGraphic)
         if isGraphic:
-            edges = hh.Max_HH()
+            edges = hh.Ur_HH()
             graph = Graph_Visual(sequence, edges)
             graph_data = graph.create_plot()
             script = graph_data[0]
