@@ -6,9 +6,10 @@ from bokeh.models import GraphRenderer, Circle, StaticLayoutProvider
 from bokeh.palettes  import Spectral10
 from bokeh.embed import components, autoload_static
 from bokeh.resources import CDN
+from hakim_basic import Havel_Hakimi
 
 TEMPLATE_PATH1 = 'C:\\Users\\Alicja\\Dropbox\\Python\\HHproject\\templates\\graph'
-TEMPLATE_PATH2 = 'something'
+SAVE_PATH = '/home/emunah/mysite/uploads/graph'
 
 class Graph_Visual:
     def __init__ (self, sequence, edges):
@@ -68,46 +69,101 @@ class Graph_Visual:
             return zip(x,y)
 
     def create_plot(self, save_number=0):
-        title = str(self.sequence)
-        plot = figure(title=title, x_range=(-1.1, 1.1),
+        title1 = str(self.sequence) + " Max Havel-Hakimi"
+        title2 = str(self.sequence) + " Min Havel-Hakimi"
+        title3 = str(self.sequence) + " Random Havel-Hakimi"
+
+        plot1 = figure(title=title1, x_range=(-1.1, 1.1),
+        y_range=(-1.1,1.1), tools="", toolbar_location=None)
+
+        plot2 = figure(title=title2, x_range=(-1.1, 1.1),
+        y_range=(-1.1,1.1), tools="", toolbar_location=None)
+
+        plot3 = figure(title=title3, x_range=(-1.1, 1.1),
         y_range=(-1.1,1.1), tools="", toolbar_location=None)
 
         colors = []
         for i in range(self.size):
             colors.append(Spectral10[i%10])
-        graph = GraphRenderer()
-        graph.node_renderer.data_source.data = dict(
-            index=self.node_indices,
+
+        graph1 = GraphRenderer()
+        graph2 = GraphRenderer()
+        graph3 = GraphRenderer()
+
+        glyphs_colors = dict(
+            index = self.node_indices,
             fill_color=colors
         )
-        graph.node_renderer.data_source.add(colors, 'color')
-        graph.node_renderer.glyph = Circle(size=25, fill_color='color')
-        plot.sizing_mode = 'scale_width'
-        if (len(self.edges) > 0):
-            start_points, end_points = map( list, zip(*self.edges) )
-            print(start_points)
-            print(end_points)
-            graph.edge_renderer.data_source.data = dict(
+
+        graph1.node_renderer.data_source.data = glyphs_colors
+        graph2.node_renderer.data_source.data = glyphs_colors
+        graph3.node_renderer.data_source.data = glyphs_colors
+
+        hh = Havel_Hakimi(self.sequence)
+        edges1 = hh.Max_HH()
+        edges2 = hh.Min_HH()
+        edges3 = hh.Ur_HH()
+
+        graph1.node_renderer.data_source.add(colors, 'color')
+        graph1.node_renderer.glyph = Circle(size=25, fill_color='color')
+        graph2.node_renderer.data_source.add(colors, 'color')
+        graph2.node_renderer.glyph = Circle(size=25, fill_color='color')
+        graph3.node_renderer.data_source.add(colors, 'color')
+        graph3.node_renderer.glyph = Circle(size=25, fill_color='color')
+        plot1.sizing_mode = 'scale_width'
+        plot2.sizing_mode = 'scale_width'
+        plot3.sizing_mode = 'scale_width'
+
+        if (len(edges1) > 0):
+            start_points, end_points = map( list, zip(*edges1) )
+            graph1.edge_renderer.data_source.data = dict(
                 start = start_points,
                 end = end_points
             )
+            start_points, end_points = map( list, zip(*edges2) )
+            graph2.edge_renderer.data_source.data = dict(
+                start = start_points,
+                end = end_points
+            )
+            start_points, end_points = map( list, zip(*edges3) )
+            graph3.edge_renderer.data_source.data = dict(
+                start = start_points,
+                end = end_points
+            )
+
         coordinates = self.layout()
         coordinates_list = list(coordinates)
-        print(coordinates_list)
         graph_layout = dict( zip(self.node_indices, coordinates_list) )
-        graph.layout_provider = StaticLayoutProvider(graph_layout=graph_layout)
+        graph1.layout_provider = StaticLayoutProvider(graph_layout=graph_layout)
+        graph2.layout_provider = StaticLayoutProvider(graph_layout=graph_layout)
+        graph3.layout_provider = StaticLayoutProvider(graph_layout=graph_layout)
 
-        plot.renderers.append(graph)
-        plot.axis.visible = False
-        plot.grid.visible = False
+        plot1.renderers.append(graph1)
+        plot1.axis.visible = False
+        plot1.grid.visible = False
+
+        plot2.renderers.append(graph2)
+        plot2.axis.visible = False
+        plot2.grid.visible = False
+
+        plot3.renderers.append(graph3)
+        plot3.axis.visible = False
+        plot3.grid.visible = False
         x = []
         y = []
         for item in coordinates_list:
             x.append(item[0])
             y.append(item[1])
-        plot.text(x, y, text=["%d" % i for i in self.sequence],
+
+        plot1.text(x, y, text=["%d" % i for i in self.sequence],
         text_baseline="middle", text_align="center")
-        script, div = components(plot)
+        plot2.text(x, y, text=["%d" % i for i in self.sequence],
+        text_baseline="middle", text_align="center")
+        plot3.text(x, y, text=["%d" % i for i in self.sequence],
+        text_baseline="middle", text_align="center")
+        plots = {'Max_HH' : plot1, 'Min_HH' : plot2, 'Ur_HH': plot3}
+
+        script, div = components((plot1, plot2, plot3))
 
         if save_number > 0:
             filename = TEMPLATE_PATH1 + str(save_number) + '.html'

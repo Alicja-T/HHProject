@@ -7,8 +7,12 @@ from werkzeug import secure_filename
 UPLOAD_FOLDER = '/home/emunah/mysite/uploads'
 UPLOAD_FOLDER2 = 'c:/temp'
 ALLOWED_EXTENSIONS = set(['txt'])
-FORM_PREFIX = """<button name="confirm" type="submit" value="graph"""
-FORM_SUFIX = """.html"> See graph </button>
+DIV_PREFIX = """<div class="form-row">
+                    <div class="form-group col-md-10">
+             """
+BUTTON_PREFIX = """<div class="form-group col-md-2"><button class="btn btn-info ml-auto" name="confirm" type="submit" value="graph"""
+BUTTON_SUFIX = """.html"> See graph </button></div>
+                </div>
             """
 
 app=Flask(__name__)
@@ -78,15 +82,16 @@ def file_analysis():
                 print(isGraphic)
                 if isGraphic:
                     i += 1
-                    div += "<div>Sequence: " + str(seq) + " is Graphic!"
+                    div += DIV_PREFIX + "Sequence: " + str(seq) + " is Graphic! </div>"
                     edges = hh.Max_HH()
                     graph = Graph_Visual(seq, edges)
                     graph_data = graph.create_plot(i)
-                    div += FORM_PREFIX + str(i) + FORM_SUFIX
+                    div += BUTTON_PREFIX + str(i) + BUTTON_SUFIX
                 else:
-                    div += "<div>Sequence: " + str(seq) + " is not Graphic!</div>"
+                    div += DIV_PREFIX + "Sequence: " + str(seq) + " is not Graphic!</div>"
         else:
             div = "your file is invalid"
+        print(div)
     return render_template("file_analysis.html", error=invalid_file, result_div = div)
 
 

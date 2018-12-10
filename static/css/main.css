@@ -33,6 +33,11 @@ div.upload {
   background-color: #2285ad;
 }
 
+div.results{
+  padding: 1.8rem;
+  background-color: #2285ad;
+}
+
 h3 {
   font-size: 1.7em;
   font-weight: 700;
