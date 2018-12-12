@@ -1,4 +1,5 @@
 from collections import defaultdict, deque
+from numpy.random import choice
 import random
 
 class Havel_Hakimi:
@@ -41,17 +42,42 @@ class Havel_Hakimi:
             index += 1
         return True
 
+    def random_pivot(self, sequence, par=1):
+        par_sum = 0
+        for item in sequence:
+            if item > 0:
+                par_sum += item**par
+        weights = []
+        totals = []
+        weights_sum = 0
+        for item in sequence:
+            if item > 0:
+                new_weight = (item**par)/par_sum
+            else:
+                new_weight = 0
+            weights.append( new_weight )
+            weights_sum += new_weight
+            totals.append(weights_sum)
+        rn = random.random() * weights_sum
+        i = 0
+        while i < len(sequence):
+            while sequence[i] == 0:
+                i+=1
+            if rn < totals[i]:
+                break
+            i+=1
+        return i
+
 #assumption: sequence at this point is stripped of zeros and leading number that represents number of vertices
     def Max_HH(self): #returns constructed graph
         if not self.is_graphic():
             return []
-        if sum(self.sequence) == 0:
+        if sum(self.sequence) == 0: #case of graph with zero edges
             return []
-        index = list(range(self.size))
         edges = []
         vertices_d = []
         max_pivot = self.sequence[0]
-        for i in range(max_pivot + 1):
+        for i in range(max_pivot + 1): #n operations
             vertices_d.append(deque())
         i = 0
         vertices_left = self.size
@@ -84,12 +110,12 @@ class Havel_Hakimi:
             return []
         if sum(self.sequence) == 0:
             return []
-        index = list(range(self.size))
         edges = []
         vertices_d = []
-        max = self.sequence[0]
+        max_degree = self.sequence[0]
+        next_max = max_degree
         min_pivot = 0
-        for i in range(max + 1):
+        for i in range(max_degree + 1):
             vertices_d.append(deque())
         i = 0
         vertices_left = self.size
@@ -101,9 +127,9 @@ class Havel_Hakimi:
             min_pivot = 1
             while (len(vertices_d[min_pivot])==0): #getting a new min_pivot
                 min_pivot += 1
-            start = vertices_d[min_pivot].popleft()
-            next_max = max
+            start = vertices_d[min_pivot].popleft() #O(1) because it's deque
             for i in range(min_pivot):
+                next_max = max_degree
                 while (len(vertices_d[next_max]) == 0):
                     next_max -= 1
                 end = vertices_d[next_max].popleft()
@@ -123,11 +149,11 @@ class Havel_Hakimi:
             return []
         if sum(self.sequence) == 0:
             return []
-        index = list(range(self.size))
         edges = []
         vertices_d = []
         sequence = self.sequence.copy()
         max_degree = self.sequence[0]
+        next_max = max_degree
         min_pivot = 0
         for i in range(max_degree + 1):
             vertices_d.append( deque() )
@@ -150,8 +176,8 @@ class Havel_Hakimi:
                     break
             start = random_pivot
             sequence[start] = 0
-            next_max = max_degree
             for i in range(index):
+                next_max = max_degree
                 while (len(vertices_d[next_max]) == 0):
                     next_max -= 1
                 end = vertices_d[next_max].popleft()
@@ -169,15 +195,61 @@ class Havel_Hakimi:
             vertices_left += len(updated_vertices) - 1
         return edges
 
+    def Parr_HH(self, par=1):
+        if not self.is_graphic():
+            return []
+        if sum(self.sequence) == 0:
+            return []
+        edges = []
+        vertices_d = []
+        sequence = self.sequence.copy()
+        indexes = list( range(self.size) )
+        max_degree = self.sequence[0]
+        for i in range(max_degree + 1):
+            vertices_d.append( deque() )
+        i = 0
+        vertices_left = self.size
+        for v in self.sequence: #creating list of vertices by degrees
+            vertices_d[v].append(i)
+            i += 1
+        next_max = max_degree
+        while vertices_left > 0:
+            updated_vertices = []
+            rand_pivot = self.random_pivot(sequence, par)
+            pivot_degree = sequence[rand_pivot]
+            sequence[rand_pivot] = 0
+            for i in range( len(vertices_d[pivot_degree]) ):
+                if vertices_d[pivot_degree][i] == rand_pivot:
+                    del vertices_d[pivot_degree][i]
+                    break
+            start = rand_pivot
+            for i in range(pivot_degree):
+                next_max = max_degree
+                while (len(vertices_d[next_max]) == 0):
+                    next_max -= 1
+                end = vertices_d[next_max].popleft()
+                edges.append([start, end])
+                sequence[end] -= 1
+                vertices_left -= 1
+                if (next_max - 1 > 0):
+                    updated_vertices.append([next_max-1, end])
+            i = 0
+            for i in range(len(updated_vertices)):
+                vertices_d[updated_vertices[i][0]].append(updated_vertices[i][1])
+                i += 1
+            vertices_left += len(updated_vertices) - 1
+        return edges
+
+
 example1 = [7, 6, 5, 4, 3, 0, 0, 0, 0, 0]
 example2 = [3, 3, 3, 3]
 example3 = [3, 3, 2, 2, 1, 1]
 petersen = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
 
-#hh = Havel_Hakimi(petersen)
+#hh = Havel_Hakimi(example2)
 #answer = hh.is_graphic()
 #print(answer)
 #edges = hh.Ur_HH()
 #print(edges)
-#edges = hh.Max_HH()
+#edges = hh.Parr_HH(2)
 #print(edges)
